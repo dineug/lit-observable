@@ -1,10 +1,10 @@
-import { html, defineComponent, ProviderElement, getContext } from '@/core';
+import { ProviderElement } from '@type/context';
+import { html, defineComponent, getContext } from '@/core';
 import { Store } from './Store';
 
 export interface TodoProviderElement extends ProviderElement<Store> {}
 
 defineComponent('todo-provider', {
-  shadow: { mode: 'open' },
   render(_, ctx: TodoProviderElement) {
     ctx.value = new Store();
     return () => html`<slot></slot>`;

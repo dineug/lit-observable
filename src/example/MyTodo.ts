@@ -3,7 +3,7 @@ import { TodoProviderElement } from './TodoProvider';
 import { html, defineComponent, query } from '@/core';
 
 defineComponent('my-todo', {
-  shadow: { mode: 'closed' },
+  shadow: 'closed',
   render() {
     const todoProviderRef = query<TodoProviderElement>('todo-provider');
 
@@ -16,6 +16,7 @@ defineComponent('my-todo', {
 
     return () => html`
       <todo-provider>
+        <div>test</div>
         <button @click=${add}>add</button>
         <todo-list></todo-list>
       </todo-provider>

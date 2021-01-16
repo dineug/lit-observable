@@ -1,24 +1,13 @@
+import {
+  PropName,
+  Observer,
+  Unsubscribe,
+  SubjectObserver,
+  Trigger,
+  NextTrigger,
+  Subject,
+} from '@type/observable';
 import { isObject, isArray } from './helper';
-
-type PropName = string | number | symbol;
-type Observer = () => void;
-export type Unsubscribe = () => void;
-type SubjectObserver<T> = (value: T) => void;
-
-interface Trigger {
-  raw: any;
-  keys: PropName[];
-}
-
-interface NextTrigger {
-  proxy: any;
-  keys: PropName[];
-}
-
-export interface Subject<T> {
-  next(value: T): void;
-  subscribe(observer: SubjectObserver<T>): Unsubscribe;
-}
 
 const rawToProxy = new WeakMap();
 const rawToObservers = new WeakMap<object, Array<Observer>>();
