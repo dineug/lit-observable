@@ -1,29 +1,29 @@
-import pkg from "./package.json";
-import config from "./rollup.config.common";
-import visualizer from "rollup-plugin-visualizer";
-import { terser } from "rollup-plugin-terser";
+import pkg from './package.json';
+import config from './rollup.config.common';
+import visualizer from 'rollup-plugin-visualizer';
+import { terser } from 'rollup-plugin-terser';
 
 const { plugins, banner } = config();
 
 export default [
   {
-    input: "src/index.ts",
+    input: 'src/index.ts',
     output: [
       {
         file: pkg.module,
-        format: "es",
+        format: 'es',
         banner,
       },
       {
-        name: "lito",
+        name: 'lito',
         file: pkg.main,
-        format: "umd",
+        format: 'umd',
         banner,
       },
       {
-        name: "lito",
+        name: 'lito',
         file: pkg.browser,
-        format: "umd",
+        format: 'umd',
         banner,
         plugins: [terser()],
       },
@@ -31,9 +31,9 @@ export default [
     plugins: [
       ...plugins,
       visualizer({
-        filename: "./dist/stats.html",
+        filename: './dist/stats.html',
       }),
     ],
-    external: ["lit-html"],
+    external: ['lit-html'],
   },
 ];

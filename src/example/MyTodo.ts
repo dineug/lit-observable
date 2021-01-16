@@ -1,11 +1,11 @@
-import "./TodoList";
-import { TodoProviderElement } from "./TodoProvider";
-import { html, defineComponent, query } from "@/core";
+import './TodoList';
+import { TodoProviderElement } from './TodoProvider';
+import { html, defineComponent, query } from '@/core';
 
-defineComponent("my-todo", {
-  shadow: { mode: "closed" },
+defineComponent('my-todo', {
+  shadow: { mode: 'closed' },
   render() {
-    const todoProviderRef = query<TodoProviderElement>("todo-provider");
+    const todoProviderRef = query<TodoProviderElement>('todo-provider');
 
     const add = () => {
       const todoProvider = todoProviderRef.value;
