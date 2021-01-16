@@ -18,7 +18,6 @@ $ npm install @dineug/lit-observable
 import { defineComponent, html, observable } from '@dineug/lit-observable';
 
 defineComponent('my-counter', {
-  shadow: { mode: 'closed' },
   render() {
     const state = observable({ count: 0 });
 
