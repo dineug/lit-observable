@@ -28,6 +28,9 @@ export interface Subject<T> {
   next(value: T): void;
   subscribe(observer: SubjectObserver<T>): Unsubscribe;
 }
+export interface ProviderElement<T> extends HTMLElement {
+  value: T;
+}
 
 declare function beforeMount(callback: Callback): void;
 declare function mounted(callback: Callback): void;
@@ -36,6 +39,7 @@ declare function updated(callback: Callback): void;
 declare function query<T = any>(selector: string): Ref<T>;
 declare function queryAll<T = any>(selector: string): Ref<T>;
 declare function defineComponent(name: string, options: Options): void;
+declare function getContext<T = any>(selector: string, el: Element): T;
 declare function closestElement(selector: string, el: any): Element | null;
 declare function observable<T>(raw: T): T;
 declare function observer(f: Observer): Unsubscribe;
