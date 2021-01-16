@@ -24,7 +24,7 @@ defineComponent("my-counter", {
     const state = observable({ count: 0 });
 
     const onIncrement = () => {
-      state.count += props.count;
+      state.count++;
     };
 
     return () => html`
