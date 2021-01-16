@@ -15,10 +15,10 @@ $ npm install @dineug/lit-observable
 ## Usage
 
 ```javascript
-import { defineComponent, html, observable } from "@dineug/lit-observable";
+import { defineComponent, html, observable } from '@dineug/lit-observable';
 
-defineComponent("my-counter", {
-  shadow: { mode: "closed" },
+defineComponent('my-counter', {
+  shadow: { mode: 'closed' },
   render() {
     const state = observable({ count: 0 });
 
@@ -33,6 +33,6 @@ defineComponent("my-counter", {
   },
 });
 
-const myCounter = document.createElement("my-counter");
+const myCounter = document.createElement('my-counter');
 document.body.appendChild(myCounter);
 ```
