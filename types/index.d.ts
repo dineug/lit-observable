@@ -33,19 +33,22 @@ export interface ProviderElement<T> extends HTMLElement {
   value: T;
 }
 
-declare function beforeMount(callback: Callback): void;
-declare function mounted(callback: Callback): void;
-declare function unmounted(callback: Callback): void;
-declare function updated(callback: Callback): void;
-declare function query<T = any>(selector: string): Ref<T>;
-declare function queryAll<T = any>(selector: string): Ref<T>;
-declare function defineComponent(name: string, options: Options): void;
-declare function getContext<T = any>(selector: string, el: Element): T;
-declare function closestElement(selector: string, el: any): Element | null;
-declare function observable<T>(raw: T): T;
-declare function observer(f: Observer): Unsubscribe;
-declare function createSubject<T>(): Subject<T>;
-declare function watch(
+export declare function beforeMount(callback: Callback): void;
+export declare function mounted(callback: Callback): void;
+export declare function unmounted(callback: Callback): void;
+export declare function updated(callback: Callback): void;
+export declare function query<T = any>(selector: string): Ref<T>;
+export declare function queryAll<T = any>(selector: string): Ref<T>;
+export declare function defineComponent(name: string, options: Options): void;
+export declare function getContext<T = any>(selector: string, el: Element): T;
+export declare function closestElement(
+  selector: string,
+  el: any
+): Element | null;
+export declare function observable<T>(raw: T): T;
+export declare function observer(f: Observer): Unsubscribe;
+export declare function createSubject<T>(): Subject<T>;
+export declare function watch(
   proxy: any,
   observer: SubjectObserver<PropName>
 ): Unsubscribe;
