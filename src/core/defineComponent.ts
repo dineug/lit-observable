@@ -1,17 +1,20 @@
-import { render, html, TemplateResult, SVGTemplateResult } from 'lit-html';
-import { observable, observer, Unsubscribe } from './observable';
+import { Callback, Template, Options, Ref } from '@type/defineComponent';
+import { Unsubscribe } from '@type/observable';
+import { render, html } from 'lit-html';
+import { observable, observer } from './observable';
+import { isSheet, isStyle } from './styleSheets';
 
 const BEFORE_MOUNT = Symbol('beforeMount');
 const MOUNTED = Symbol('mounted');
 const UNMOUNTED = Symbol('unmounted');
 const UPDATED = Symbol('updated');
+const QUERY = Symbol('query');
+const QUERY_ALL = Symbol('queryAll');
+const UNSUBSCRIBE = Symbol('unsubscribe');
 const RENDER_ROOT = Symbol('renderRoot');
 const TEMPLATE = Symbol('template');
 const STYLE = Symbol('style');
 const PROPS = Symbol('props');
-const UNSUBSCRIBE = Symbol('unsubscribe');
-const QUERY = Symbol('query');
-const QUERY_ALL = Symbol('queryAll');
 
 type LifecycleName =
   | typeof BEFORE_MOUNT
@@ -19,28 +22,6 @@ type LifecycleName =
   | typeof UNMOUNTED
   | typeof UPDATED;
 type QueryName = typeof QUERY | typeof QUERY_ALL;
-type Callback = () => void;
-type Template = () => TemplateResult | SVGTemplateResult;
-export type FunctionalComponent<P = any, T = HTMLElement> = (
-  this: HTMLElement,
-  props: P,
-  ctx: T
-) => Template;
-
-interface ShadowOptions {
-  mode: 'open' | 'closed';
-}
-
-interface Options {
-  observedProps?: string[];
-  shadow?: ShadowOptions;
-  style?: string;
-  render: FunctionalComponent<any, any>;
-}
-
-interface Ref<T> {
-  value: T;
-}
 
 interface Component {
   [BEFORE_MOUNT]: Callback[] | null;
@@ -88,6 +69,10 @@ export const query = createQuery(QUERY);
 export const queryAll = createQuery(QUERY_ALL);
 
 export function defineComponent(name: string, options: Options) {
+  options.shadow ?? (options.shadow = 'open');
+  const sheet = isSheet(options) ? new CSSStyleSheet() : null;
+  sheet && sheet.replaceSync(options.style || '');
+
   const C = class extends HTMLElement implements Component {
     static get observedAttributes() {
       return options.observedProps ?? [];
@@ -108,13 +93,17 @@ export function defineComponent(name: string, options: Options) {
       super();
 
       this[RENDER_ROOT] = options.shadow
-        ? this.attachShadow(options.shadow)
+        ? this.attachShadow({ mode: options.shadow })
         : document.createElement('div');
 
-      if (options.style) {
+      if (isStyle(options)) {
         const style = document.createElement('style');
-        style.textContent = options.style;
+        style.textContent = options.style || '';
         this[STYLE] = style;
+      }
+
+      if (sheet) {
+        (this[RENDER_ROOT] as ShadowRoot).adoptedStyleSheets = [sheet];
       }
 
       currentInstance = this;
@@ -125,7 +114,10 @@ export function defineComponent(name: string, options: Options) {
     connectedCallback() {
       this[BEFORE_MOUNT]?.forEach(f => f());
 
-      options.shadow ?? this.appendChild(this[RENDER_ROOT]);
+      if (!options.shadow) {
+        this[STYLE] && this.appendChild(this[STYLE] as HTMLStyleElement);
+        this.appendChild(this[RENDER_ROOT]);
+      }
 
       let isMounted = false;
       this[UNSUBSCRIBE].push(

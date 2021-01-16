@@ -4,7 +4,6 @@ import { getTodoContext } from './TodoProvider';
 import { Store } from './Store';
 
 defineComponent('todo-list', {
-  shadow: { mode: 'open' },
   render(_, ctx) {
     const store = getTodoContext<Store>(ctx);
 

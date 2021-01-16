@@ -6,7 +6,6 @@ interface TodoItemProps {
 }
 
 defineComponent('todo-item', {
-  shadow: { mode: 'open' },
   observedProps: ['todo'],
   render(props: TodoItemProps) {
     return () => html`<li>${props.todo.name}</li>`;
