@@ -15,8 +15,7 @@ $ npm install @dineug/lit-observable
 ## Usage
 
 ```javascript
-import { defineComponent } from "@dineug/lit-observable";
-import { html } from "lit-html";
+import { defineComponent, html } from "@dineug/lit-observable";
 
 defineComponent("my-counter", {
   shadow: { mode: "closed" },
