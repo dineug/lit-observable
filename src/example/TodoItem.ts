@@ -1,5 +1,4 @@
-import { html } from "lit-html";
-import { defineComponent } from "@/core";
+import { html, defineComponent } from "@/core";
 import { Todo } from "./Store";
 
 interface TodoItemProps {

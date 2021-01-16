@@ -1,6 +1,5 @@
 import "./TodoItem";
-import { html } from "lit-html";
-import { defineComponent } from "@/core";
+import { html, defineComponent } from "@/core";
 import { getTodoContext } from "./TodoProvider";
 import { Store } from "./Store";
 
