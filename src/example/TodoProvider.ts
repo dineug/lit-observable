@@ -1,5 +1,4 @@
-import { html } from "lit-html";
-import { defineComponent, ProviderElement, getContext } from "@/core";
+import { html, defineComponent, ProviderElement, getContext } from "@/core";
 import { Store } from "./Store";
 
 export interface TodoProviderElement extends ProviderElement<Store> {}

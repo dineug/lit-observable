@@ -1,7 +1,6 @@
 import "./TodoList";
 import { TodoProviderElement } from "./TodoProvider";
-import { html } from "lit-html";
-import { defineComponent, query } from "@/core";
+import { html, defineComponent, query } from "@/core";
 
 defineComponent("my-todo", {
   shadow: { mode: "closed" },
