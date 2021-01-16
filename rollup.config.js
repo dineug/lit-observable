@@ -34,5 +34,6 @@ export default [
         filename: "./dist/stats.html",
       }),
     ],
+    external: ["lit-html"],
   },
 ];
