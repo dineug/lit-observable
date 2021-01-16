@@ -1,4 +1,4 @@
-import { isObject, isArray } from "./helper";
+import { isObject, isArray } from './helper';
 
 type PropName = string | number | symbol;
 type Observer = () => void;
@@ -130,7 +130,7 @@ export function observable<T>(raw: T): T {
       if (!isArray(target)) {
         effect(target, p);
         nextEffect(target, p);
-      } else if (p === "length") {
+      } else if (p === 'length') {
         effect(target, p);
         nextEffect(target, p);
       }

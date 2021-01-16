@@ -1,22 +1,22 @@
 module.exports = {
-  plugins: ["@snowpack/plugin-typescript"],
+  plugins: ['@snowpack/plugin-typescript'],
   installOptions: {},
   devOptions: {
     port: 8080,
-    fallback: "index.html",
-    open: "default",
-    output: "dashboard",
-    hostname: "localhost",
+    fallback: 'index.html',
+    open: 'default',
+    output: 'dashboard',
+    hostname: 'localhost',
     hmr: true,
     hmrErrorOverlay: true,
   },
   buildOptions: {},
   mount: {
-    public: "/",
-    src: "/_dist_",
+    public: '/',
+    src: '/_dist_',
   },
   alias: {
-    "@": "./src",
-    "@type": "./types",
+    '@': './src',
+    '@type': './types',
   },
 };

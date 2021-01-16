@@ -1,4 +1,4 @@
-import { closestElement } from "./helper";
+import { closestElement } from './helper';
 
 export interface ProviderElement<T> extends HTMLElement {
   value: T;

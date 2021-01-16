@@ -1,17 +1,17 @@
-import { render, html, TemplateResult, SVGTemplateResult } from "lit-html";
-import { observable, observer, Unsubscribe } from "./observable";
+import { render, html, TemplateResult, SVGTemplateResult } from 'lit-html';
+import { observable, observer, Unsubscribe } from './observable';
 
-const BEFORE_MOUNT = Symbol("beforeMount");
-const MOUNTED = Symbol("mounted");
-const UNMOUNTED = Symbol("unmounted");
-const UPDATED = Symbol("updated");
-const RENDER_ROOT = Symbol("renderRoot");
-const TEMPLATE = Symbol("template");
-const STYLE = Symbol("style");
-const PROPS = Symbol("props");
-const UNSUBSCRIBE = Symbol("unsubscribe");
-const QUERY = Symbol("query");
-const QUERY_ALL = Symbol("queryAll");
+const BEFORE_MOUNT = Symbol('beforeMount');
+const MOUNTED = Symbol('mounted');
+const UNMOUNTED = Symbol('unmounted');
+const UPDATED = Symbol('updated');
+const RENDER_ROOT = Symbol('renderRoot');
+const TEMPLATE = Symbol('template');
+const STYLE = Symbol('style');
+const PROPS = Symbol('props');
+const UNSUBSCRIBE = Symbol('unsubscribe');
+const QUERY = Symbol('query');
+const QUERY_ALL = Symbol('queryAll');
 
 type LifecycleName =
   | typeof BEFORE_MOUNT
@@ -28,7 +28,7 @@ export type FunctionalComponent<P = any, T = HTMLElement> = (
 ) => Template;
 
 interface ShadowOptions {
-  mode: "open" | "closed";
+  mode: 'open' | 'closed';
 }
 
 interface Options {
@@ -109,10 +109,10 @@ export function defineComponent(name: string, options: Options) {
 
       this[RENDER_ROOT] = options.shadow
         ? this.attachShadow(options.shadow)
-        : document.createElement("div");
+        : document.createElement('div');
 
       if (options.style) {
-        const style = document.createElement("style");
+        const style = document.createElement('style');
         style.textContent = options.style;
         this[STYLE] = style;
       }

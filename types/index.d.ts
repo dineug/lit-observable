@@ -1,5 +1,5 @@
-import { TemplateResult, SVGTemplateResult } from "lit-html";
-export { html, svg, TemplateResult, SVGTemplateResult } from "lit-html";
+import { TemplateResult, SVGTemplateResult } from 'lit-html';
+export { html, svg, TemplateResult, SVGTemplateResult } from 'lit-html';
 
 type Callback = () => void;
 type Template = () => TemplateResult | SVGTemplateResult;
@@ -14,7 +14,7 @@ export type FunctionalComponent<P = any, T = HTMLElement> = (
 ) => Template;
 
 interface ShadowOptions {
-  mode: "open" | "closed";
+  mode: 'open' | 'closed';
 }
 interface Options {
   observedProps?: string[];

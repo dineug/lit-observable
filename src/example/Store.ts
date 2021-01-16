@@ -1,4 +1,4 @@
-import { observable } from "@/core";
+import { observable } from '@/core';
 
 export interface Todo {
   name: string;
