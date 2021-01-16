@@ -17,6 +17,6 @@ module.exports = {
   },
   alias: {
     "@": "./src",
-    "@types": "./types",
+    "@type": "./types",
   },
 };
