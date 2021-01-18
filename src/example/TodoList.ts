@@ -3,8 +3,16 @@ import { html, defineComponent } from '@/core';
 import { getTodoContext } from './TodoProvider';
 import { Store } from './Store';
 
+declare global {
+  interface HTMLElementTagNameMap {
+    'todo-list': TodoListElement;
+  }
+}
+
+interface TodoListElement extends HTMLElement {}
+
 defineComponent('todo-list', {
-  render(_, ctx) {
+  render(_, ctx: TodoListElement) {
     const store = getTodoContext<Store>(ctx);
 
     return () => html`

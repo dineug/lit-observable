@@ -2,6 +2,14 @@ import './TodoList';
 import { TodoProviderElement } from './TodoProvider';
 import { html, defineComponent, query } from '@/core';
 
+declare global {
+  interface HTMLElementTagNameMap {
+    'my-todo': MyTodoElement;
+  }
+}
+
+interface MyTodoElement extends HTMLElement {}
+
 defineComponent('my-todo', {
   shadow: 'closed',
   render() {
@@ -16,7 +24,6 @@ defineComponent('my-todo', {
 
     return () => html`
       <todo-provider>
-        <div>test</div>
         <button @click=${add}>add</button>
         <todo-list></todo-list>
       </todo-provider>

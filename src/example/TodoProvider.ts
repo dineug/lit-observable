@@ -2,6 +2,12 @@ import { ProviderElement } from '@type/context';
 import { html, defineComponent, getContext } from '@/core';
 import { Store } from './Store';
 
+declare global {
+  interface HTMLElementTagNameMap {
+    'todo-provider': TodoProviderElement;
+  }
+}
+
 export interface TodoProviderElement extends ProviderElement<Store> {}
 
 defineComponent('todo-provider', {

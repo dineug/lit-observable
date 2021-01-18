@@ -1,6 +1,8 @@
 import { Callback, Template, Options, Ref } from '@type/defineComponent';
 import { Unsubscribe } from '@type/observable';
 import { render, html } from 'lit-html';
+import kebabCase from 'lodash/kebabCase';
+import camelCase from 'lodash/camelCase';
 import { observable, observer } from './observable';
 import { isSheet, isStyle } from './styleSheets';
 
@@ -70,12 +72,19 @@ export const queryAll = createQuery(QUERY_ALL);
 
 export function defineComponent(name: string, options: Options) {
   options.shadow ?? (options.shadow = 'open');
+
+  const observedProps = options.observedProps ?? [];
   const sheet = isSheet(options) ? new CSSStyleSheet() : null;
   sheet && sheet.replaceSync(options.style || '');
 
   const C = class extends HTMLElement implements Component {
     static get observedAttributes() {
-      return options.observedProps ?? [];
+      return Array.from(
+        new Set([
+          ...observedProps,
+          ...observedProps.map(propName => kebabCase(propName)),
+        ])
+      );
     }
 
     [BEFORE_MOUNT]: Callback[] | null = null;
@@ -84,7 +93,7 @@ export function defineComponent(name: string, options: Options) {
     [UPDATED]: Callback[] | null = null;
     [QUERY]: Callback[] | null = null;
     [UNSUBSCRIBE]: Unsubscribe[] = [];
-    [RENDER_ROOT]!: ShadowRoot | HTMLElement;
+    [RENDER_ROOT]: ShadowRoot | HTMLElement = this;
     [TEMPLATE]: Template;
     [STYLE]: HTMLStyleElement | null = null;
     [PROPS] = observable({}) as any;
@@ -92,9 +101,8 @@ export function defineComponent(name: string, options: Options) {
     constructor() {
       super();
 
-      this[RENDER_ROOT] = options.shadow
-        ? this.attachShadow({ mode: options.shadow })
-        : document.createElement('div');
+      options.shadow &&
+        (this[RENDER_ROOT] = this.attachShadow({ mode: options.shadow }));
 
       if (isStyle(options)) {
         const style = document.createElement('style');
@@ -102,9 +110,7 @@ export function defineComponent(name: string, options: Options) {
         this[STYLE] = style;
       }
 
-      if (sheet) {
-        (this[RENDER_ROOT] as ShadowRoot).adoptedStyleSheets = [sheet];
-      }
+      sheet && ((this[RENDER_ROOT] as ShadowRoot).adoptedStyleSheets = [sheet]);
 
       currentInstance = this;
       this[TEMPLATE] = options.render.call(this, this[PROPS], this);
@@ -113,11 +119,6 @@ export function defineComponent(name: string, options: Options) {
 
     connectedCallback() {
       this[BEFORE_MOUNT]?.forEach(f => f());
-
-      if (!options.shadow) {
-        this[STYLE] && this.appendChild(this[STYLE] as HTMLStyleElement);
-        this.appendChild(this[RENDER_ROOT]);
-      }
 
       let isMounted = false;
       this[UNSUBSCRIBE].push(
@@ -138,8 +139,15 @@ export function defineComponent(name: string, options: Options) {
       this[UNMOUNTED]?.forEach(f => f());
     }
 
-    attributeChangedCallback(name: string, oldValue: any, newValue: any) {
-      this[PROPS][name] = newValue;
+    attributeChangedCallback(
+      propName: string,
+      oldValue: string | null,
+      newValue: string | null
+    ) {
+      const camelPropName = camelCase(propName);
+      this[PROPS][
+        propName === camelPropName ? propName : camelPropName
+      ] = newValue;
     }
   };
 
