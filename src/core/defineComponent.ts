@@ -144,7 +144,7 @@ export function defineComponent(name: string, options: Options) {
       oldValue: string | null,
       newValue: string | null
     ) {
-      this[PROPS][camelCase(propName)] = newValue;
+      Reflect.set(this[PROPS], camelCase(propName), newValue);
     }
   };
 
