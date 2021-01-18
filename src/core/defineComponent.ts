@@ -151,10 +151,10 @@ export function defineComponent(name: string, options: Options) {
   options.observedProps?.forEach(propName => {
     Object.defineProperty(C.prototype, propName, {
       get() {
-        return this[PROPS][propName];
+        return Reflect.get(this[PROPS], propName);
       },
       set(value) {
-        this[PROPS][propName] = value;
+        Reflect.set(this[PROPS], propName, value);
       },
     });
   });
