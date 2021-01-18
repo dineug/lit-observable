@@ -51,6 +51,7 @@
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-visualizer": "^4.2.0",
     "snowpack": "^2.18.5",
+    "stats.js": "^0.17.0",
     "typescript": "^4.1.3"
   },
   "dependencies": {
