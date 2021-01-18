@@ -144,10 +144,7 @@ export function defineComponent(name: string, options: Options) {
       oldValue: string | null,
       newValue: string | null
     ) {
-      const camelPropName = camelCase(propName);
-      this[PROPS][
-        propName === camelPropName ? propName : camelPropName
-      ] = newValue;
+      this[PROPS][camelCase(propName)] = newValue;
     }
   };
 
