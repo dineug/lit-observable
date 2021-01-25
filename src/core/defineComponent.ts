@@ -1,10 +1,17 @@
-import { Callback, Template, Options, Ref } from '@type/defineComponent';
+import {
+  Callback,
+  Template,
+  Options,
+  Ref,
+  AttributeOptions,
+} from '@type/defineComponent';
 import { Unsubscribe } from '@type/observable';
 import { render, html } from 'lit-html';
 import kebabCase from 'lodash/kebabCase';
 import camelCase from 'lodash/camelCase';
 import { observable, observer } from './observable';
 import { isSheet, isStyle } from './styleSheets';
+import { isObject } from './helper';
 
 const BEFORE_MOUNT = Symbol('beforeMount');
 const MOUNTED = Symbol('mounted');
@@ -74,6 +81,9 @@ export function defineComponent(name: string, options: Options) {
   options.shadow ?? (options.shadow = 'open');
 
   const observedProps = options.observedProps ?? [];
+  const observedPropNames = observedProps.map(prop =>
+    isObject(prop) ? (prop as AttributeOptions).name : (prop as string)
+  );
   const sheet = isSheet(options) ? new CSSStyleSheet() : null;
   sheet && sheet.replaceSync(options.style || '');
 
@@ -81,8 +91,8 @@ export function defineComponent(name: string, options: Options) {
     static get observedAttributes() {
       return Array.from(
         new Set([
-          ...observedProps,
-          ...observedProps.map(propName => kebabCase(propName)),
+          ...observedPropNames,
+          ...observedPropNames.map(propName => kebabCase(propName)),
         ])
       );
     }
@@ -144,11 +154,25 @@ export function defineComponent(name: string, options: Options) {
       oldValue: string | null,
       newValue: string | null
     ) {
-      Reflect.set(this[PROPS], camelCase(propName), newValue);
+      const attributeOptions = observedProps.find(
+        prop =>
+          isObject(prop) &&
+          camelCase((prop as AttributeOptions).name) === camelCase(propName)
+      ) as AttributeOptions | undefined;
+
+      attributeOptions
+        ? Reflect.set(
+            this[PROPS],
+            camelCase(propName),
+            attributeOptions.type === Boolean && newValue === 'false'
+              ? false
+              : attributeOptions.type(newValue)
+          )
+        : Reflect.set(this[PROPS], camelCase(propName), newValue);
     }
   };
 
-  options.observedProps?.forEach(propName => {
+  observedPropNames.forEach(propName => {
     Object.defineProperty(C.prototype, propName, {
       get() {
         return Reflect.get(this[PROPS], propName);

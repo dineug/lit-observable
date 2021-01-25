@@ -8,8 +8,13 @@ export type FunctionalComponent<P = any, T = HTMLElement> = (
   ctx: T
 ) => Template;
 
+export interface AttributeOptions {
+  name: string;
+  type: typeof Boolean | typeof Number | typeof String;
+}
+
 export interface Options {
-  observedProps?: string[];
+  observedProps?: Array<string | AttributeOptions>;
   shadow?: ShadowRootMode | false;
   style?: string;
   render: FunctionalComponent<any, any>;
