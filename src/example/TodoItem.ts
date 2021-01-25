@@ -15,7 +15,5 @@ interface TodoItemElement extends TodoItemProps, HTMLElement {}
 
 defineComponent('todo-item', {
   observedProps: ['todo'],
-  render(props: TodoItemProps) {
-    return () => html`<li>${props.todo.name}</li>`;
-  },
+  render: (props: TodoItemProps) => () => html`<li>${props.todo.name}</li>`,
 });

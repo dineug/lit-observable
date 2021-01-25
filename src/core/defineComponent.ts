@@ -3,7 +3,7 @@ import {
   Template,
   Options,
   Ref,
-  AttributeOptions,
+  PropOptions,
 } from '@type/defineComponent';
 import { Unsubscribe } from '@type/observable';
 import { render, html } from 'lit-html';
@@ -11,7 +11,7 @@ import kebabCase from 'lodash/kebabCase';
 import camelCase from 'lodash/camelCase';
 import { observable, observer } from './observable';
 import { isSheet, isStyle } from './styleSheets';
-import { isObject } from './helper';
+import { isObject, isUndefined } from './helper';
 
 const BEFORE_MOUNT = Symbol('beforeMount');
 const MOUNTED = Symbol('mounted');
@@ -82,8 +82,11 @@ export function defineComponent(name: string, options: Options) {
 
   const observedProps = options.observedProps ?? [];
   const observedPropNames = observedProps.map(prop =>
-    isObject(prop) ? (prop as AttributeOptions).name : (prop as string)
+    isObject(prop) ? (prop as PropOptions).name : (prop as string)
   );
+  const observedPropsOptions = observedProps.filter(prop =>
+    isObject(prop)
+  ) as PropOptions[];
   const sheet = isSheet(options) ? new CSSStyleSheet() : null;
   sheet && sheet.replaceSync(options.style || '');
 
@@ -110,6 +113,16 @@ export function defineComponent(name: string, options: Options) {
 
     constructor() {
       super();
+
+      observedPropsOptions.forEach(
+        propOptions =>
+          isUndefined(propOptions.default) ||
+          Reflect.set(
+            this[PROPS],
+            camelCase(propOptions.name),
+            propOptions.default
+          )
+      );
 
       options.shadow &&
         (this[RENDER_ROOT] = this.attachShadow({ mode: options.shadow }));
@@ -154,19 +167,19 @@ export function defineComponent(name: string, options: Options) {
       oldValue: string | null,
       newValue: string | null
     ) {
-      const attributeOptions = observedProps.find(
+      const propOptions = observedProps.find(
         prop =>
           isObject(prop) &&
-          camelCase((prop as AttributeOptions).name) === camelCase(propName)
-      ) as AttributeOptions | undefined;
+          camelCase((prop as PropOptions).name) === camelCase(propName)
+      ) as PropOptions | undefined;
 
-      attributeOptions
+      propOptions && propOptions.type
         ? Reflect.set(
             this[PROPS],
             camelCase(propName),
-            attributeOptions.type === Boolean && newValue === 'false'
+            propOptions.type === Boolean && newValue === 'false'
               ? false
-              : attributeOptions.type(newValue)
+              : propOptions.type(newValue)
           )
         : Reflect.set(this[PROPS], camelCase(propName), newValue);
     }
