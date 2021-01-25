@@ -96,7 +96,10 @@ function effect(raw: any, p: PropName) {
 
 function execute() {
   while (queue.length) {
-    observer(queue.shift() as Observer);
+    const target = queue.shift() as Observer;
+
+    unobserve(target);
+    observer(target);
   }
   batch = false;
 }
