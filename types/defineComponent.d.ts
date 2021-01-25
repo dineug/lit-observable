@@ -7,14 +7,18 @@ export type FunctionalComponent<P = any, T = HTMLElement> = (
   props: P,
   ctx: T
 ) => Template;
+export type PrimitiveType = string | number | boolean | null | undefined;
+export type Convert = (value: string | null) => PrimitiveType;
 
-export interface AttributeOptions {
+export interface PropOptions {
   name: string;
-  type: typeof Boolean | typeof Number | typeof String;
+  default?: PrimitiveType;
+  // attribute convert type
+  type?: Convert | typeof String | typeof Number | typeof Boolean;
 }
 
 export interface Options {
-  observedProps?: Array<string | AttributeOptions>;
+  observedProps?: Array<string | PropOptions>;
   shadow?: ShadowRootMode | false;
   style?: string;
   render: FunctionalComponent<any, any>;
