@@ -95,7 +95,9 @@ function effect(raw: any, p: PropName) {
 }
 
 function execute() {
-  while (queue.length) (queue.shift() as Observer)();
+  while (queue.length) {
+    observer(queue.shift() as Observer);
+  }
   batch = false;
 }
 
@@ -116,7 +118,10 @@ export function observable<T>(raw: T): T {
       return value;
     },
     set(target, p, value, receiver) {
-      if (!isArray(target)) {
+      const oldValue = Reflect.get(target, p, receiver);
+      const res = Reflect.set(target, p, value, receiver);
+
+      if (!isArray(target) && oldValue !== value) {
         effect(target, p);
         nextEffect(target, p);
       } else if (p === 'length') {
@@ -124,7 +129,7 @@ export function observable<T>(raw: T): T {
         nextEffect(target, p);
       }
 
-      return Reflect.set(target, p, value, receiver);
+      return res;
     },
   });
 
