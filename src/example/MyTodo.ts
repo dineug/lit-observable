@@ -1,6 +1,7 @@
 import './TodoList';
 import { TodoProviderElement } from './TodoProvider';
-import { html, defineComponent, query } from '@/core';
+import { Store } from './Store';
+import { html, defineComponent, mounted, query } from '@/core';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -14,11 +15,16 @@ defineComponent('my-todo', {
   shadow: 'closed',
   render() {
     const todoProviderRef = query<TodoProviderElement>('todo-provider');
+    let store: Store | null = null;
+
+    mounted(() => {
+      const todoProvider = todoProviderRef.value;
+      store = todoProvider.value;
+    });
 
     const add = () => {
-      const todoProvider = todoProviderRef.value;
-      if (todoProvider) {
-        todoProvider.value.add({ name: `${Math.random()}` });
+      if (store) {
+        store.add({ name: `${Math.random()}` });
       }
     };
 

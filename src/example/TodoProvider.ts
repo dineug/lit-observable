@@ -17,5 +17,5 @@ defineComponent('todo-provider', {
   },
 });
 
-export const getTodoContext = <T>(el: Element) =>
-  getContext<T>('todo-provider', el);
+export const getTodoContext = (el: Element) =>
+  getContext<Store>('todo-provider', el);
