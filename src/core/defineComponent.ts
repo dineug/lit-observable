@@ -4,8 +4,8 @@ import {
   Options,
   Ref,
   PropOptions,
-} from '@type/defineComponent';
-import { Unsubscribe } from '@type/observable';
+} from '@@types/defineComponent';
+import { Unsubscribe } from '@@types/observable';
 import { render, html } from 'lit-html';
 import kebabCase from 'lodash/kebabCase';
 import camelCase from 'lodash/camelCase';

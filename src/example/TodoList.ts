@@ -1,6 +1,6 @@
 import './TodoItem';
 import { html, defineComponent } from '@/core';
-import { getTodoContext } from './TodoProvider';
+import { getTodoContextRef } from './TodoProvider';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -12,11 +12,13 @@ interface TodoListElement extends HTMLElement {}
 
 defineComponent('todo-list', {
   render(_, ctx: TodoListElement) {
-    const store = getTodoContext(ctx);
+    const storeRef = getTodoContextRef(ctx);
 
     return () => html`
       <ul>
-        ${store.list.map(todo => html`<todo-item .todo=${todo}></todo-item>`)}
+        ${storeRef.value.list.map(
+          todo => html`<todo-item .todo=${todo}></todo-item>`
+        )}
       </ul>
     `;
   },

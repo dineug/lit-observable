@@ -6,7 +6,7 @@ import {
   Trigger,
   NextTrigger,
   Subject,
-} from '@type/observable';
+} from '@@types/observable';
 import { isObject, isArray } from './helper';
 
 const rawToProxy = new WeakMap();

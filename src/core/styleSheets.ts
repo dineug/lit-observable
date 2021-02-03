@@ -1,4 +1,4 @@
-import { Options } from '@type/defineComponent';
+import { Options } from '@@types/defineComponent';
 
 const supportsAdoptingStyleSheets =
   window.ShadowRoot &&
