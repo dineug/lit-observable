@@ -21,6 +21,7 @@ export interface Options {
   observedProps?: Array<string | PropOptions>;
   shadow?: ShadowRootMode | false;
   style?: string;
+  styleMap?: Partial<CSSStyleDeclaration>;
   render: FunctionalComponent<any, any>;
 }
 

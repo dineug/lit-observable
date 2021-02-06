@@ -135,6 +135,8 @@ export function defineComponent(name: string, options: Options) {
 
       sheet && ((this[RENDER_ROOT] as ShadowRoot).adoptedStyleSheets = [sheet]);
 
+      options.styleMap && Object.assign(this.style, options.styleMap);
+
       currentInstance = this;
       this[TEMPLATE] = options.render.call(this, this[PROPS], this);
       currentInstance = null;
