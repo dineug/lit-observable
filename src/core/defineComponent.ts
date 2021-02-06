@@ -178,8 +178,8 @@ export function defineComponent(name: string, options: Options) {
         ? Reflect.set(
             this[PROPS],
             camelCase(propName),
-            propOptions.type === Boolean && newValue === 'false'
-              ? false
+            propOptions.type === Boolean
+              ? newValue === 'true' || newValue === ''
               : propOptions.type(newValue)
           )
         : Reflect.set(this[PROPS], camelCase(propName), newValue);
