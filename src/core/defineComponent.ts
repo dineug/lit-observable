@@ -16,6 +16,8 @@ import { isObject, isUndefined } from './helper';
 const BEFORE_MOUNT = Symbol('beforeMount');
 const MOUNTED = Symbol('mounted');
 const UNMOUNTED = Symbol('unmounted');
+const BEFORE_UPDATE = Symbol('beforeUpdate');
+const FIRST_UPDATED = Symbol('firstUpdated');
 const UPDATED = Symbol('updated');
 const QUERY = Symbol('query');
 const QUERY_ALL = Symbol('queryAll');
@@ -29,6 +31,8 @@ type LifecycleName =
   | typeof BEFORE_MOUNT
   | typeof MOUNTED
   | typeof UNMOUNTED
+  | typeof BEFORE_UPDATE
+  | typeof FIRST_UPDATED
   | typeof UPDATED;
 type QueryName = typeof QUERY | typeof QUERY_ALL;
 
@@ -36,6 +40,8 @@ interface Component {
   [BEFORE_MOUNT]: Callback[] | null;
   [MOUNTED]: Callback[] | null;
   [UNMOUNTED]: Callback[] | null;
+  [BEFORE_UPDATE]: Callback[] | null;
+  [FIRST_UPDATED]: Callback[] | null;
   [UPDATED]: Callback[] | null;
   [QUERY]: Callback[] | null;
   [UNSUBSCRIBE]: Unsubscribe[];
@@ -73,6 +79,8 @@ const createQuery = (name: QueryName) => <T = any>(
 export const beforeMount = createLifecycle(BEFORE_MOUNT);
 export const mounted = createLifecycle(MOUNTED);
 export const unmounted = createLifecycle(UNMOUNTED);
+export const beforeUpdate = createLifecycle(BEFORE_UPDATE);
+export const firstUpdated = createLifecycle(FIRST_UPDATED);
 export const updated = createLifecycle(UPDATED);
 export const query = createQuery(QUERY);
 export const queryAll = createQuery(QUERY_ALL);
@@ -103,6 +111,8 @@ export function defineComponent(name: string, options: Options) {
     [BEFORE_MOUNT]: Callback[] | null = null;
     [MOUNTED]: Callback[] | null = null;
     [UNMOUNTED]: Callback[] | null = null;
+    [BEFORE_UPDATE]: Callback[] | null = null;
+    [FIRST_UPDATED]: Callback[] | null = null;
     [UPDATED]: Callback[] | null = null;
     [QUERY]: Callback[] | null = null;
     [UNSUBSCRIBE]: Unsubscribe[] = [];
@@ -147,10 +157,17 @@ export function defineComponent(name: string, options: Options) {
       let isMounted = false;
       this[UNSUBSCRIBE].push(
         observer(() => {
+          isMounted && this[BEFORE_UPDATE]?.forEach(f => f());
+
           render(html`${this[STYLE]}${this[TEMPLATE]()}`, this[RENDER_ROOT]);
           this[QUERY]?.forEach(f => f());
 
-          isMounted ? this[UPDATED]?.forEach(f => f()) : (isMounted = true);
+          if (isMounted) {
+            this[UPDATED]?.forEach(f => f());
+          } else {
+            this[FIRST_UPDATED]?.forEach(f => f());
+            isMounted = true;
+          }
         })
       );
 

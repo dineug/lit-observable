@@ -4,6 +4,8 @@ export {
   beforeMount,
   mounted,
   unmounted,
+  beforeUpdate,
+  firstUpdated,
   updated,
   query,
   queryAll,
