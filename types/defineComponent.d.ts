@@ -32,8 +32,9 @@ export interface Ref<T> {
 export declare function beforeMount(callback: Callback): void;
 export declare function mounted(callback: Callback): void;
 export declare function unmounted(callback: Callback): void;
-export declare function beforeUpdate(callback: Callback): void;
+export declare function beforeFirstUpdate(callback: Callback): void;
 export declare function firstUpdated(callback: Callback): void;
+export declare function beforeUpdate(callback: Callback): void;
 export declare function updated(callback: Callback): void;
 export declare function query<T = any>(selector: string): Ref<T>;
 export declare function queryAll<T = any>(selector: string): Ref<T>;
