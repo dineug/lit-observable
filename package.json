@@ -1,6 +1,6 @@
 {
   "name": "@dineug/lit-observable",
-  "version": "0.1.22",
+  "version": "0.1.23",
   "description": "lit-html + reactive",
   "main": "dist/lit-observable.js",
   "module": "dist/lit-observable.esm.js",

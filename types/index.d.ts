@@ -15,5 +15,9 @@ export {
   defineComponent,
 } from './defineComponent';
 export { ProviderElement, getContext } from './context';
-export { closestElement } from './helper';
+export {
+  closestElement,
+  queryShadowSelector,
+  queryShadowSelectorAll,
+} from './helper';
 export { html, svg, TemplateResult, SVGTemplateResult } from 'lit-html';
