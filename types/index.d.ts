@@ -10,6 +10,8 @@ export {
   updated,
   query,
   queryAll,
+  queryShadow,
+  queryShadowAll,
   defineComponent,
 } from './defineComponent';
 export { ProviderElement, getContext } from './context';

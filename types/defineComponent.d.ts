@@ -38,4 +38,6 @@ export declare function beforeUpdate(callback: Callback): void;
 export declare function updated(callback: Callback): void;
 export declare function query<T = any>(selector: string): Ref<T>;
 export declare function queryAll<T = any>(selector: string): Ref<T>;
+export declare function queryShadow<T = any>(...selectors: string[]): Ref<T>;
+export declare function queryShadowAll<T = any>(...selectors: string[]): Ref<T>;
 export declare function defineComponent(name: string, options: Options): void;

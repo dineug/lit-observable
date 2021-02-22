@@ -11,7 +11,12 @@ import kebabCase from 'lodash/kebabCase';
 import camelCase from 'lodash/camelCase';
 import { observable, observer } from './observable';
 import { isSheet, isStyle } from './styleSheets';
-import { isObject, isUndefined } from './helper';
+import {
+  isObject,
+  isUndefined,
+  queryShadowSelector,
+  queryShadowSelectorAll,
+} from './helper';
 
 const BEFORE_MOUNT = Symbol('beforeMount');
 const MOUNTED = Symbol('mounted');
@@ -22,6 +27,8 @@ const BEFORE_UPDATE = Symbol('beforeUpdate');
 const UPDATED = Symbol('updated');
 const QUERY = Symbol('query');
 const QUERY_ALL = Symbol('queryAll');
+const QUERY_SHADOW = Symbol('queryShadow');
+const QUERY_SHADOW_ALL = Symbol('queryShadowAll');
 const UNSUBSCRIBE = Symbol('unsubscribe');
 const RENDER_ROOT = Symbol('renderRoot');
 const TEMPLATE = Symbol('template');
@@ -37,8 +44,9 @@ type LifecycleName =
   | typeof BEFORE_UPDATE
   | typeof UPDATED;
 type QueryName = typeof QUERY | typeof QUERY_ALL;
+type QueryShadowName = typeof QUERY_SHADOW | typeof QUERY_SHADOW_ALL;
 
-interface Component {
+interface Component extends HTMLElement {
   [BEFORE_MOUNT]: Callback[] | null;
   [MOUNTED]: Callback[] | null;
   [UNMOUNTED]: Callback[] | null;
@@ -78,6 +86,24 @@ const createQuery = (name: QueryName) => <T = any>(
 
   return ref;
 };
+const createQueryShadow = (name: QueryShadowName) => <T = any>(
+  ...selectors: string[]
+): Ref<T> => {
+  const ref = { value: null } as Ref<any>;
+
+  if (currentInstance) {
+    const el = currentInstance;
+    const f = () =>
+      (ref.value =
+        name === QUERY_SHADOW
+          ? queryShadowSelector(selectors, el)
+          : queryShadowSelectorAll(selectors, el));
+
+    (currentInstance[QUERY] ?? (currentInstance[QUERY] = [])).push(f);
+  }
+
+  return ref;
+};
 
 export const beforeMount = createLifecycle(BEFORE_MOUNT);
 export const mounted = createLifecycle(MOUNTED);
@@ -88,6 +114,8 @@ export const beforeUpdate = createLifecycle(BEFORE_UPDATE);
 export const updated = createLifecycle(UPDATED);
 export const query = createQuery(QUERY);
 export const queryAll = createQuery(QUERY_ALL);
+export const queryShadow = createQueryShadow(QUERY_SHADOW);
+export const queryShadowAll = createQueryShadow(QUERY_SHADOW_ALL);
 
 export function defineComponent(name: string, options: Options) {
   options.shadow ?? (options.shadow = 'open');
