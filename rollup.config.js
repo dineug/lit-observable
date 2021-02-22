@@ -1,6 +1,7 @@
 import pkg from './package.json';
 import config from './rollup.config.common';
 import visualizer from 'rollup-plugin-visualizer';
+import filesize from 'rollup-plugin-filesize';
 import { terser } from 'rollup-plugin-terser';
 
 const { plugins, banner } = config();
@@ -32,6 +33,9 @@ export default [
       ...plugins,
       visualizer({
         filename: './dist/stats.html',
+      }),
+      filesize({
+        showBrotliSize: true,
       }),
     ],
     external: ['lit-html'],
