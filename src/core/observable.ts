@@ -44,32 +44,32 @@ function unobserve(observer: Observer) {
 }
 
 function addObserver(raw: any) {
-  if (currentObserver !== null) {
-    const observers = rawToObservers.get(raw);
+  if (!currentObserver) return;
 
-    if (!observers) {
-      rawToObservers.set(raw, [currentObserver]);
-    } else if (!observers.includes(currentObserver)) {
-      observers.push(currentObserver);
-    }
+  const observers = rawToObservers.get(raw);
+
+  if (!observers) {
+    rawToObservers.set(raw, [currentObserver]);
+  } else if (!observers.includes(currentObserver)) {
+    observers.push(currentObserver);
   }
 }
 
 function addTrigger(raw: any, p: PropName) {
-  if (currentObserver !== null) {
-    const triggers = observerToTriggers.get(currentObserver);
+  if (!currentObserver) return;
 
-    if (triggers) {
-      const trigger = triggers.find(trigger => trigger.raw === raw);
+  const triggers = observerToTriggers.get(currentObserver);
 
-      if (!trigger) {
-        triggers.push({ raw, keys: [p] });
-      } else if (!trigger.keys.includes(p)) {
-        trigger.keys.push(p);
-      }
-    } else {
-      observerToTriggers.set(currentObserver, [{ raw, keys: [p] }]);
+  if (triggers) {
+    const trigger = triggers.find(trigger => trigger.raw === raw);
+
+    if (!trigger) {
+      triggers.push({ raw, keys: [p] });
+    } else if (!trigger.keys.includes(p)) {
+      trigger.keys.push(p);
     }
+  } else {
+    observerToTriggers.set(currentObserver, [{ raw, keys: [p] }]);
   }
 }
 
@@ -81,18 +81,17 @@ function isTrigger(raw: any, p: PropName, observer: Observer) {
     : false;
 }
 
-function effect(raw: any, p: PropName) {
+const effect = (raw: any, p: PropName) =>
   rawToObservers.get(raw)?.forEach(observer => {
-    if (isTrigger(raw, p, observer)) {
-      queue.includes(observer) || queue.push(observer);
+    if (!isTrigger(raw, p, observer)) return;
 
-      if (!batch) {
-        requestAnimationFrame(execute);
-        batch = true;
-      }
+    queue.includes(observer) || queue.push(observer);
+
+    if (!batch) {
+      requestAnimationFrame(execute);
+      batch = true;
     }
   });
-}
 
 function execute() {
   while (queue.length) {
@@ -144,24 +143,22 @@ export function observable<T>(raw: T): T {
 
 function nextEffect(raw: any, p: PropName) {
   const proxy = rawToProxy.get(raw);
+  if (!proxy) return;
 
-  if (proxy) {
-    const subject = proxyToSubject.get(proxy);
+  const subject = proxyToSubject.get(proxy);
+  if (!subject) return;
 
-    if (subject) {
-      const trigger = nextQueue.find(trigger => trigger.proxy === proxy);
+  const trigger = nextQueue.find(trigger => trigger.proxy === proxy);
 
-      if (!trigger) {
-        nextQueue.push({ proxy, keys: [p] });
-      } else if (!trigger.keys.includes(p)) {
-        trigger.keys.push(p);
-      }
+  if (!trigger) {
+    nextQueue.push({ proxy, keys: [p] });
+  } else if (!trigger.keys.includes(p)) {
+    trigger.keys.push(p);
+  }
 
-      if (!nextBatch) {
-        requestAnimationFrame(nextExecute);
-        nextBatch = true;
-      }
-    }
+  if (!nextBatch) {
+    requestAnimationFrame(nextExecute);
+    nextBatch = true;
   }
 }
 
