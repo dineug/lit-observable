@@ -88,7 +88,7 @@ const effect = (raw: any, p: PropName) =>
     queue.includes(observer) || queue.push(observer);
 
     if (!batch) {
-      requestAnimationFrame(execute);
+      queueMicrotask(execute);
       batch = true;
     }
   });
@@ -157,7 +157,7 @@ function nextEffect(raw: any, p: PropName) {
   }
 
   if (!nextBatch) {
-    requestAnimationFrame(nextExecute);
+    queueMicrotask(nextExecute);
     nextBatch = true;
   }
 }
