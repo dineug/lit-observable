@@ -1,7 +1,11 @@
 import { TemplateResult, SVGTemplateResult } from 'lit-html';
 
 export type Callback = () => void;
-export type Template = () => TemplateResult | SVGTemplateResult;
+export type Template = () =>
+  | TemplateResult
+  | SVGTemplateResult
+  | null
+  | undefined;
 export type FunctionalComponent<P = any, T = HTMLElement> = (
   this: HTMLElement,
   props: P,
