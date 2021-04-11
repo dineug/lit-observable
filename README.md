@@ -6,7 +6,9 @@
 
 ## Document
 
-- [example](https://github.com/dineug/lit-observable/tree/main/src/example)
+- Example
+  - [simple](https://github.com/dineug/lit-observable/tree/main/src/example)
+  - [erd-editor](https://github.com/vuerd/vuerd)
 
 ## Install
 
