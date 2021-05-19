@@ -1,3 +1,7 @@
+# Moved
+
+This module has moved and is now available at [@vuerd/lit-observable](https://github.com/vuerd/vuerd). Please update your dependencies. This repository is no longer maintained.
+
 # lit-observable
 
 > lit-html + reactive
